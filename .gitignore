@@ -1,0 +1,40 @@
+# Maven / Java
+target/
+build/
+*.class
+*.log
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+.apt_generated/
+.sts4-cache/
+
+# Configuracoes privadas e segredos
+.env
+.env.*
+!.env.example
+**/application-local.properties
+**/application-secret.properties
+**/application-prod.properties
+**/application-private.properties
+*.pem
+*.key
+*.p12
+*.jks
+
+# Arquivos locais e temporarios
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+
+# Manter no repositorio: pom.xml, mvnw, mvnw.cmd, .mvn/wrapper/,
+# src/, README.md e scripts de banco sem dados pessoais.
