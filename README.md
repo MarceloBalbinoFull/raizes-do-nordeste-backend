@@ -49,6 +49,18 @@ Confira o Java instalado com `java -version`.
 
 ## Preparar o banco de dados
 
+O projeto utiliza **MySQL 8** e o banco `raizes_do_nordeste`. O repositório inclui o arquivo [`Raizes_do_Nordeste_Estrutura.sql`](Raizes_do_Nordeste_Estrutura.sql), com a estrutura das nove tabelas, suas chaves e relacionamentos, sem dados operacionais ou registros de usuários.
+
+Há duas formas de preparar a estrutura em um ambiente de desenvolvimento:
+
+**Opção 1 — Executar o script SQL em um banco novo**
+
+No MySQL Workbench, abra `Raizes_do_Nordeste_Estrutura.sql`, confira a conexão escolhida e execute o arquivo **somente em um ambiente de teste sem dados que precisem ser preservados**. O script cria o banco, se necessário, e define as tabelas e os relacionamentos.
+
+**Atenção:** o script contém comandos `DROP TABLE IF EXISTS`, capazes de excluir tabelas existentes e seus registros. **Não execute esse arquivo em um banco que contenha dados importantes.**
+
+**Opção 2 — Criar apenas o banco e utilizar o Hibernate**
+
 No MySQL Workbench, conecte-se ao servidor e execute:
 
 ```sql
@@ -59,7 +71,7 @@ CREATE DATABASE IF NOT EXISTS raizes_do_nordeste
 
 A conexão padrão configurada no projeto é `jdbc:mysql://localhost:3306/raizes_do_nordeste`.
 
-O arquivo `src/main/resources/application.properties` utiliza `spring.jpa.hibernate.ddl-auto=update`: no ambiente local, o Hibernate cria ou atualiza a estrutura das entidades quando a aplicação inicia, desde que o banco exista e o usuário possua as permissões necessárias. **Esse mecanismo não substitui migrações versionadas para produção.** O ZIP analisado não inclui um script SQL independente de criação das tabelas nem uma carga de dados iniciais.
+O arquivo `src/main/resources/application.properties` utiliza `spring.jpa.hibernate.ddl-auto=update`: no ambiente local, o Hibernate cria ou atualiza a estrutura das entidades quando a aplicação inicia, desde que o banco exista e o usuário possua as permissões necessárias. **Esse mecanismo não substitui migrações versionadas para produção.**
 
 As entidades mapeadas são `Usuario`, `Unidade`, `Produto`, `Estoque`, `Pedido`, `ItemPedido`, `Pagamento`, `Fidelidade` e `Promocao`. Não existe entidade `PRODUTO_UNIDADE` no código: a associação entre produto e unidade é feita por `Estoque`, com restrição de unicidade para o par (`produto_id`, `unidade_id`).
 
@@ -360,7 +372,16 @@ O `GlobalExceptionHandler` padroniza diversos erros com os campos `status`, `men
 
 ## Verificação e evidências
 
-**O que há no ZIP analisado:** um teste automatizado `RaizesDoNordesteBackendApplicationTests.contextLoads()`, que verifica o carregamento do contexto do Spring. Não há, no ZIP, suíte automatizada de cenários de negócio, coleção exportada do Postman, capturas de evidência, scripts SQL ou arquivos de diagramas. Esses materiais não devem ser apresentados como existentes até serem adicionados.
+O projeto contém o teste automatizado `RaizesDoNordesteBackendApplicationTests.contextLoads()`, destinado a verificar o carregamento do contexto do Spring. Não foi identificada uma suíte automatizada abrangendo todos os cenários de negócio.
+
+Além disso, **foram executados manualmente 16 casos de teste (CT01 a CT16)** no Postman e no MySQL Workbench, incluindo cadastros, consultas, persistência, controle de estoque, pedidos, pagamentos simulados, autenticação e autorização. Todos os 16 cenários apresentaram os resultados esperados e suas evidências foram registradas no relatório acadêmico do projeto.
+
+O repositório disponibiliza os arquivos complementares:
+
+- [`Raízes do Nordeste - API.postman_collection.json`](Ra%C3%ADzes%20do%20Nordeste%20-%20API.postman_collection.json): coleção exportada do Postman, preparada para compartilhamento sem credenciais sensíveis. Para executar requisições protegidas, informe suas próprias credenciais e obtenha um novo token JWT.
+- [`Raizes_do_Nordeste_Estrutura.sql`](Raizes_do_Nordeste_Estrutura.sql): script de estrutura do banco de dados MySQL, sem registros operacionais.
+
+As capturas de tela e a descrição detalhada de cada caso de teste constam no **capítulo 6 do relatório acadêmico**, que é mantido separadamente do código-fonte.
 
 Para executar os testes automatizados disponíveis, com MySQL e variáveis de ambiente configurados:
 
@@ -385,7 +406,7 @@ Para verificar manualmente a API pelo Swagger/Postman, use um banco preparado e 
 | Cliente acessando pedido alheio | `GET /pedidos/{id}` | `403`. |
 | Reprocessamento do mesmo pagamento | `POST /pagamentos` | `409`. |
 
-A tabela descreve **resultados esperados pela implementação, não resultados de uma execução realizada nesta análise**. As evidências da entrega acadêmica devem ser coletadas com as requisições realmente executadas, e a coleção do Postman deve ser exportada separadamente quando estiver pronta.
+A tabela apresenta **cenários adicionais de conferência e seus resultados esperados**, não a declaração de que cada cenário da tabela foi executado. Os resultados dos **16 casos efetivamente executados (CT01–CT16)** e suas respectivas evidências estão registrados no relatório acadêmico.
 
 ## Limites e cuidados para publicação
 
@@ -394,10 +415,10 @@ A tabela descreve **resultados esperados pela implementação, não resultados d
 - Cadastro e consulta de promoções existem, mas o preço promocional não é aplicado automaticamente aos pedidos.
 - Crédito de fidelidade não é automático após a compra.
 - Não há controle de versionamento do schema por Flyway/Liquibase nesta versão; o ambiente local utiliza Hibernate `ddl-auto=update`.
-- Os diagramas do projeto e a coleção Postman **não estão incluídos no ZIP analisado**; devem ser versionados separadamente se fizerem parte da entrega final.
+- A coleção do Postman e o script SQL já estão disponíveis neste repositório. Os diagramas e as capturas das evidências integram a documentação acadêmica mantida separadamente; confira os materiais exigidos pela disciplina antes do envio.
 - A configuração Swagger/OpenAPI está acessível sem autenticação; em implantação de produção, revise sua exposição, as políticas de segurança, os logs, a gestão de segredos e as permissões do banco.
 - Antes de compartilhar arquivos compactados, exclua pastas locais como `.idea/`, `.git/` e `target/`. Em especial, configurações de execução da IDE podem armazenar variáveis privadas. Para publicação do código, prefira o Git com o `.gitignore` corretamente configurado.
 
 ## Transparência na elaboração da documentação
 
-O README foi organizado e revisado com auxílio do **ChatGPT (OpenAI)**, a partir do código-fonte enviado pelo responsável pelo projeto. A solicitação foi verificar a versão atualizada do ZIP e produzir documentação fiel às classes e configurações existentes. Esta revisão foi **estática**: não substitui a execução dos testes e a conferência final no ambiente de entrega.
+O README foi organizado e revisado com auxílio do **ChatGPT (OpenAI)**, a partir do código-fonte enviado pelo responsável pelo projeto Marcelo Balbino. A solicitação foi verificar a versão atualizada do ZIP e produzir documentação fiel às classes e configurações existentes. Esta revisão foi **estática**: não substitui a execução dos testes e a conferência final no ambiente de entrega.
