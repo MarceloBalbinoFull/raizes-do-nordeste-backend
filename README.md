@@ -374,7 +374,7 @@ O `GlobalExceptionHandler` padroniza diversos erros com os campos `status`, `men
 
 O projeto contém o teste automatizado `RaizesDoNordesteBackendApplicationTests.contextLoads()`, destinado a verificar o carregamento do contexto do Spring. Não foi identificada uma suíte automatizada abrangendo todos os cenários de negócio.
 
-Além disso, **foram executados manualmente 16 casos de teste (CT01 a CT16)** no Postman e no MySQL Workbench, incluindo cadastros, consultas, persistência, controle de estoque, pedidos, pagamentos simulados, autenticação e autorização. Todos os 16 cenários apresentaram os resultados esperados e suas evidências foram registradas no relatório acadêmico do projeto.
+Além disso, **foram executados manualmente 18 casos de teste (CT01 a CT18), sendo 10 cenários positivos e 8 negativos**, no Postman e no MySQL Workbench, incluindo cadastros, consultas, persistência, controle de estoque, pedidos, pagamentos simulados, autenticação e autorização. O **CT17** validou o login com credenciais válidas (**HTTP 200 OK e emissão de token JWT**), e o **CT18** verificou a consulta de pedido inexistente (**HTTP 404 Not Found**). Todos os 18 cenários apresentaram os resultados esperados e suas evidências foram registradas no relatório acadêmico do projeto.
 
 O repositório disponibiliza os arquivos complementares:
 
@@ -406,7 +406,7 @@ Para verificar manualmente a API pelo Swagger/Postman, use um banco preparado e 
 | Cliente acessando pedido alheio | `GET /pedidos/{id}` | `403`. |
 | Reprocessamento do mesmo pagamento | `POST /pagamentos` | `409`. |
 
-A tabela apresenta **cenários adicionais de conferência e seus resultados esperados**, não a declaração de que cada cenário da tabela foi executado. Os resultados dos **16 casos efetivamente executados (CT01–CT16)** e suas respectivas evidências estão registrados no relatório acadêmico.
+A tabela reúne **exemplos de conferência e seus resultados esperados**. Alguns correspondem a testes já realizados, e outros são possibilidades adicionais de verificação; ela não representa a lista completa dos testes executados. Os resultados dos **18 casos efetivamente executados (CT01–CT18)** e suas respectivas evidências estão registrados no relatório acadêmico.
 
 ## Limites e cuidados para publicação
 
